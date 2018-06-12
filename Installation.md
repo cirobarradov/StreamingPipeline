@@ -3,6 +3,7 @@ Requirements Installation Guide
 Requirements
 ------------
 - Operative System: Ubuntu 16.04 
+
 Java 8
 ------------
 ```
@@ -27,7 +28,6 @@ Docker-Compose
 ```
 sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-```
 ```
 Kafka
 ------------
