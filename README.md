@@ -1,7 +1,9 @@
 Streaming Pipeline
 =================
 
-Stream processing pipeline with apache beam, druid and superset
+Stream processing pipeline with apache kafka, beam, druid and superset
+![Architecture](architecture.png)
+
 Requirements
 ------------
 - Operative System: Ubuntu 16.04 / OS X
