@@ -2,7 +2,7 @@ Quickstart
 =================
 Steps
 ------------
-- ##### Create database configuration (only once)
+- ##### Create sqlite database configuration (only once)
 ```
 docker-compose up -d redis
 mkdir -p superset
