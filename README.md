@@ -7,12 +7,12 @@ Stream processing pipeline with apache kafka, beam, druid and superset
 Requirements
 ------------
 - Operative System: Ubuntu 16.04 / OS X
-- [Java 8](INSTALL)
-- [Docker](INSTALL)
-- [Docker-Compose](INSTALL)
-- [Kafka](INSTALL)
-- [Druid](INSTALL)
-- [Apache Beam](INSTALL)
+- [Java 8](INSTALL.md)
+- [Docker](INSTALL.md)
+- [Docker-Compose](INSTALL.md)
+- [Kafka](INSTALL.md)
+- [Druid](INSTALL.md)
+- [Apache Beam](INSTALL.md)
 
 Steps
 ------------
