@@ -1,7 +1,6 @@
-#import os
+import os
 
-MAPBOX_API_KEY = 'pk.eyJ1IjoicmljYXJkb2JyYXZvNzkiLCJhIjoiY2poejV0ZTViMDkzZzNwbzF0ZW4xNTFvZCJ9.C00DZSPV6QZZJ9T5oF9pcg'
-#MAPBOX_API_KEY = os.getenv('MAPBOX_API_KEY', '')
+MAPBOX_API_KEY = os.getenv('MAPBOX_API_KEY', '')
 CACHE_CONFIG = {
     'CACHE_TYPE': 'redis',
     'CACHE_DEFAULT_TIMEOUT': 300,
