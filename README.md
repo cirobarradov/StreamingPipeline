@@ -43,7 +43,7 @@ bin/tranquility server -configFile <path_to_druid_distro>/conf-quickstart/tranqu
 - ##### [Start Apache Superset](superset) 
 - ##### [Generate Stream Data Sources](sources)
 - ##### [Process data with Apache Beam](beam) 
-- ##### Collect data processed with Apache Druid
+- ##### [Collect data processed with Apache Druid](druid)
 - ##### [Data visualization with Apache Superset](superset) 
  
 License
