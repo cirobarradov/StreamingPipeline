@@ -20,7 +20,7 @@ Steps
 ```
 confluent start kafka 
 ```
-- ##### Collect data processed with Apache Druid
+- ##### Apache Druid Quickstart
 Install and start **druid** 
 ```
 curl -O http://static.druid.io/artifacts/releases/druid-0.12.1-bin.tar.gz
@@ -33,7 +33,7 @@ java `cat conf-quickstart/druid/coordinator/jvm.config | xargs` -cp "conf-quicks
 java `cat conf-quickstart/druid/overlord/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/overlord:lib/*" io.druid.cli.Main server overlord
 java `cat conf-quickstart/druid/middleManager/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/middleManager:lib/*" io.druid.cli.Main server middleManager
 ```
-Install and start **tranquility **
+Install and start **tranquility**
 ```
 curl -O http://static.druid.io/tranquility/releases/tranquility-distribution-0.8.0.tgz
 tar -xzf tranquility-distribution-0.8.0.tgz
@@ -43,6 +43,7 @@ bin/tranquility server -configFile <path_to_druid_distro>/conf-quickstart/tranqu
 - ##### [Start Apache Superset](superset) 
 - ##### [Generate Stream Data Sources](sources)
 - ##### [Process data with Apache Beam](beam) 
+- ##### Collect data processed with Apache Druid
 - ##### [Data visualization with Apache Superset](superset) 
  
 License
