@@ -12,10 +12,13 @@ Requirements
 - [Druid](INSTALL)
 - [Apache Beam](INSTALL)
 
-QuickStart
+Steps
 ------------
-
-
+- Run Apache Kafka
+- Generate Stream Data Sources
+- Process data with Apache Beam 
+- Collect data processed with Apache Druid 
+- Data visualization with Apache Superset 
 
 License
 ------------
