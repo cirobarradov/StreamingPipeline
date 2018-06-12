@@ -1,6 +1,4 @@
 #!/bin/bash
-#echo "Starting zookeper ..."
-#docker-compose up -d zookeeper
 
 echo "Starting redis service..."
 docker-compose up -d redis
@@ -8,10 +6,6 @@ docker-compose up -d redis
 # Start Superset
 echo "Starting Superset..."
 docker-compose up -d superset
-if [ "$1" == "celery" ]; then
-  echo "Starting Superset worker..."
-  docker-compose up -d worker
-fi
 echo "Sleeping for 30s"
 sleep 30
 
