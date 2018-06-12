@@ -2,6 +2,14 @@ Quickstart
 =================
 Steps
 ------------
+- ##### Create database configuration (only once)
+```
+docker-compose up -d redis
+mkdir -p superset
+touch superset/superset.db
+docker-compose up -d superset
+docker-compose down -v
+```
 - ##### Start Redis and Superset
 ```
 bash demo.sh
