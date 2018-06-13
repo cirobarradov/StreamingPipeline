@@ -17,4 +17,4 @@ Features
 
 Screenshots
 ------------
-![deckgl](https://superset.apache.org/_images/deckgl_dash.png)
+![deckgl](deckgl_dash.png)
