@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.io.kafka.KafkaIO;
@@ -18,9 +17,8 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.Values;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.kafka.connect.json.JsonSerializer;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,7 @@ public class TwitterPipeline {
      */
     private interface Options extends PipelineOptions {
         @Description("Kafka Bootstrap Servers")
-        @Default.String("localhost:9092")
+        @Default.String("52.166.0.40:9092")
         String getKafkaServer();
         void setKafkaServer(String value);
 
@@ -51,6 +49,12 @@ public class TwitterPipeline {
         Long getDuration();
         void setDuration(Long duration);
 
+       /* class GDELTFileFactory implements DefaultValueFactory<String> {
+            public String create(PipelineOptions options) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                return format.format(new Date());
+            }
+        }*/
     }
 
 
@@ -98,7 +102,7 @@ public class TwitterPipeline {
                     @ProcessElement
                     public void processElement(ProcessContext c){
                         //String lang=twitterUtils.getLanguage(c.element());
-                        if (TwitterUtils.isAllowedLanguage(c.element()) && TwitterUtils.isGeoEnabled(c.element()))
+                        if (TwitterUtils.isAllowedLanguage(c.element()))
                         //if (lang.toUpperCase().equals(TwitterUtils.LANGUAGE))
                         {
                             c.output(c.element());
@@ -113,13 +117,13 @@ public class TwitterPipeline {
          */
 
         final String key=options.getInputTopic();
-        PCollection<JsonNode> tweetsAnalyzed =
-                tweetsInEnglish.apply("getTextField", ParDo.of(new DoFn<String, JsonNode>() {
+        PCollection<KV<String,String>> textTweets =
+                tweetsInEnglish.apply("getTextField", ParDo.of(new DoFn<String, KV<String,String>>() {
                     @ProcessElement
                     public void processElement(ProcessContext c){
-                        JsonNode analyzeTweet  = TwitterUtils.analyzeTweet(c.element());
-                        c.output(analyzeTweet);
-                        LOG.info(analyzeTweet.toString());
+                        String text  = TwitterUtils.analyzeTweet(c.element());
+                        c.output(KV.of(key,text));
+                        LOG.info(text);
                     }
                 }));
 
@@ -128,12 +132,12 @@ public class TwitterPipeline {
         /**
          * write text in topic
          */
-        tweetsAnalyzed.apply("WriteToKafka",
-                KafkaIO.<String, JsonNode>write()
+        textTweets.apply("WriteToKafka",
+                KafkaIO.<String, String>write()
                         .withBootstrapServers(options.getKafkaServer())
                         .withTopic(options.getOutputTopic())
-                        .withValueSerializer(JsonSerializer.class)
-                        .values());
+                        .withKeySerializer(org.apache.kafka.common.serialization.StringSerializer.class)
+                        .withValueSerializer(org.apache.kafka.common.serialization.StringSerializer.class));
         PipelineResult pipelineResult = pipeline.run();
         pipelineResult.waitUntilFinish(Duration.standardSeconds(options.getDuration()));
     }
