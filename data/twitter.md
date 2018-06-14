@@ -8,10 +8,10 @@ Configure Twitter kafka source connector
 git clone https://github.com/jcustenborder/kafka-connect-twitter.git
 cd kafka-connect-twitter
 mvn clean package
-export CLASSPATH="$(find target/ -type f -name '*.jar'| grep '\-package' | tr '\n' ':')"
+
 
 ```
-$CONFLUENT_HOME/bin/connect-standalone connect/connect-avro-docker.properties config/TwitterSourceConnector.properties
+
 
 Configure connect worker
 ------------------------
@@ -44,10 +44,10 @@ vi twitter-connector.properties
 
 ```
 connector.class=com.github.jcustenborder.kafka.connect.twitter.TwitterSourceConnector
-twitter.oauth.accessToken=149493204-Dbgs9O0PnNhxfuu1MCYOY3iFw8dtehHksuUdqBYu
-twitter.oauth.consumerSecret=oejG2EhiNdjB9wcCCc3k5gj2OWz8uYg3tHKBXB3Y1Is9Jp4CZk
-twitter.oauth.consumerKey=vu020ahFhHDlDcRCMYpphptyH
-twitter.oauth.accessTokenSecret=DGtLmA1m4e3CtZ56W2nDT2UfPZqcLoUZBWlERbky1RL5b
+twitter.oauth.accessToken=
+twitter.oauth.consumerSecret=
+twitter.oauth.consumerKey=
+twitter.oauth.accessTokenSecret=
 kafka.delete.topic=twitter_deletes_json_01
 value.converter=org.apache.kafka.connect.json.JsonConverter
 key.converter=org.apache.kafka.connect.json.JsonConverter
