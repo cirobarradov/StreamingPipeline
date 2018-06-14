@@ -8,7 +8,7 @@ Requirements
 ------------
 - Operative System: Ubuntu 16.04 / OS X
 - [Java 8](INSTALL.md)
-- [Maven](INSTALL.md)
+- [Maven/git](INSTALL.md)
 - [Docker](INSTALL.md)
 - [Docker-Compose](INSTALL.md)
 - [Kafka](INSTALL.md)
