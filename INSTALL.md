@@ -18,6 +18,14 @@ sudo apt-get update
 sudo apt-get install default-jre
 sudo apt-get install default-jdk
 ```
+
+Maven
+-----
+```
+sudo apt-get update
+sudo apt-get install maven
+```
+
 Docker
 ------------
 ```
