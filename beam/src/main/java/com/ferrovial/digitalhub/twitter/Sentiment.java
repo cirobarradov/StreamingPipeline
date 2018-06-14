@@ -10,6 +10,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Sentiment {
 
@@ -67,6 +72,13 @@ public class Sentiment {
 
     public static void main (String[] args) {
         try {
+
+            //2018-06-07T09:53:27.227Z
+            Clock myClock = Clock.systemDefaultZone();
+            Instant now = myClock.instant();
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(now, ZoneId.of("Europe/Madrid"));
+            ///2018-06-07T09:53:27.227Z  "2000-01-01T00:00:00Z"
+            DateTimeFormatter.ofPattern("yyyy/MM/dd-hh:mm:ss").format(zdt);
             Documents documents = new Documents ();
             documents.add ("1", "en", "I really enjoy the new XBox One S. It has a clean look, it has 4K/HDR resolution and it is affordable.");
             documents.add ("2", "es", "Este ha sido un dia terrible, llegué tarde al trabajo debido a un accidente automobilistico.");
