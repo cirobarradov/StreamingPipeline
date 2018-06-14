@@ -3,13 +3,19 @@ package com.ferrovial.digitalhub.twitter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class TwitterUtils {
-    final static String[] LANGUAGES = {"\"EN\"","\"ES\""};
+    final static String[] LANGUAGES = {"EN","ES"};
     final static String NULL ="null";
 
 
@@ -32,9 +38,9 @@ public class TwitterUtils {
         if (lang.isEmpty()) {
             lang="NA";
         }
-        return lang;
+        return lang.substring(1, lang.length() - 1);
     }
-
+/*
     public static Boolean isGeoEnabled(String json) {
         JsonNode tweet= parseJson(json);
         return !String.valueOf(tweet.get("GeoLocation")).equals(NULL);
@@ -45,9 +51,11 @@ public class TwitterUtils {
     {
         return json;
     }
+    */
     public static boolean isAllowedLanguage(String json) {
         String lang = getLanguage(json);
         return Arrays.asList(TwitterUtils.LANGUAGES).contains(lang.toUpperCase());
+        //return lang.toUpperCase().in(TwitterUtils.LANGUAGE);
     }
 
     public static  String getText(String json) {
@@ -61,20 +69,20 @@ public class TwitterUtils {
      * @param json
      * @return
      */
-    public static JsonNode analyzeTweet ( String json)
+    public static String analyzeTweet ( String json)
     {
 
         JsonNode tweet= parseJson(json);
         String text= String.valueOf(tweet.get("Text"));
         String id= String.valueOf(tweet.get("Id"));
         Documents documents = new Documents ();
-        String lang = getLanguage(json);
-        documents.add (id,  lang.substring(1, lang.length() - 1), text);
+        documents.add (id,  getLanguage(json), text);
         JsonNode sentimentJson =null;
         JsonNode keyPhrasesJson = null;
         try {
             sentimentJson = parseJson(Sentiment.getSentiment(documents));
             keyPhrasesJson = parseJson(KeyPhrases.getKeyPhrases(documents));
+            Thread.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,12 +125,21 @@ public class TwitterUtils {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode res = mapper.createObjectNode();
         res.put("id", id);
+        //2018-06-07T09:53:27.227Z
+        Clock myClock = Clock.systemDefaultZone();
+        Instant now = myClock.instant();
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(now, ZoneId.of("Europe/Madrid"));
+
+        res.put("timestamp", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS zzz").format(zdt));
+
+        //"2018/06/07-12:35:03
+        // "2000-01-01T00:00:00Z"
         res.put("text", text);
         res.put("sentiment", sentimentJson.get("documents").get(0).get("score"));
         res.put("keyPhrases", keyPhrasesJson.get("documents").get(0).get("keyPhrases"));
         res.put("position", tweet.get("User").get("Location"));
-
-        return res;
+        res.put("json",json);
+        return res.toString();
     }
 
 
