@@ -1,4 +1,4 @@
 Generate data
 =============
-- [Taxi data](taxi)
+- [NYC Taxi data](taxi)
 - [Twitter data](twitter)
