@@ -1,7 +1,7 @@
 Generate data
 =============
 
-![data sources](datasources.png)
+![data sources](/img/datasources.png)
 
 - [NYC Taxi data](taxi)
 - [Twitter data](twitter)
