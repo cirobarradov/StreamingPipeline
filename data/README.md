@@ -5,6 +5,6 @@ Generate data
 <img align="left" width="200" height="200" src="/img/datasources.png">
 
 <br><br><br>
-&nbsp;&nbsp;&nbsp - [NYC Taxi data](taxi)
+&nbsp;&nbsp;&nbsp; - [NYC Taxi data](taxi)
 
-&nbsp;&nbsp;&nbsp - [Twitter data](twitter)
+&nbsp;&nbsp;&nbsp; - [Twitter data](twitter)
