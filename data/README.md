@@ -7,4 +7,6 @@ Generate data
 - [Twitter data](twitter)
 
 
-<img style="float: right;" src="/img/datasources.png">asdfasdfasdf
+<img style="float: right;" src="/img/datasources.png">
+- [NYC Taxi data](taxi)
+- [Twitter data](twitter)
