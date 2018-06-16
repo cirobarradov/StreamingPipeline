@@ -3,7 +3,7 @@ Apache Beam PoC
 
 Stream processing with Apache Beam
 
-![beam](beam.png)
+![beam](/img/beam.png)
 
 Quickstart
 ----------
