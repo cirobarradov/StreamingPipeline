@@ -3,7 +3,7 @@ Generate data
 
 ## `left` alignment
 
-<img align="left" width="100" height="100" src="/img/datasources.png">
+<img align="left" width="200" height="200" src="/img/datasources.png">
 
 This is the code you need to align images to the left:
 ```
