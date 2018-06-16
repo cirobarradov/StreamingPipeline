@@ -19,3 +19,4 @@ Generate data
 
         </td>
     </tr>
+</table>
