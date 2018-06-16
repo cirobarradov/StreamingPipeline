@@ -6,6 +6,12 @@ Generate data
 - [NYC Taxi data](taxi)
 - [Twitter data](twitter)
 
+---
+title: "Untitled"
+author: "Ian Wesley"
+date: "April 21, 2017"
+output: html_document
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
