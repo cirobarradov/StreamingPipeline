@@ -7,9 +7,4 @@ Generate data
 - [Twitter data](twitter)
 
 
-![Alt text][id]
-![Alt text][id2]
-
-[id]:
-/img/datasources.png asdfasdf
-[id2]:
+<img style="float: right;" src="/img/datasources.png">asdfasdfasdf
