@@ -2,7 +2,7 @@ Streaming Pipeline
 =================
 
 Stream processing pipeline with apache kafka, beam, druid and superset
-![Architecture](architecture.png)
+![Architecture](/img/architecture.png)
 
 Requirements
 ------------
