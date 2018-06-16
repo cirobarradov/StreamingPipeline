@@ -20,6 +20,7 @@ sed -i '1i rideId,taxiId,driverId,startTime,paymentType,tip,tolls,totalFare' nyc
 Send data to broker
 -------------------------
 ```
+(start broker: confluent start kafka or alternative ways)
 sh producer.sh -f nycTaxiRides -t taxi_rides -b ${IP_BROKER}:9092
 sh producer.sh -f nycTaxiFares -t taxi_fares -b ${IP_BROKER}:9092
 ```
