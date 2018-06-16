@@ -1,3 +1,4 @@
 Load data from Kafka into Druid
 ================================
-![/img/druid.png](druid)
+
+![Druid](/img/druid.png)
