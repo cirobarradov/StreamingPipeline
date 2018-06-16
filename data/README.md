@@ -6,26 +6,18 @@ Generate data
 - [NYC Taxi data](taxi)
 - [Twitter data](twitter)
 
----
-title: "Untitled"
-author: "Ian Wesley"
-date: "April 21, 2017"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-<div style= "float:right;position: relative; top: -80px;">
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+<div id="left">
+$$y_i \backsim Normal(\mu_i, \sigma)$$
+$$\mu_i = \alpha + \beta x_i$$
+$$\sigma \backsim Uniform(0, 1)$$
+$$\beta \backsim Normal(0, 10)$$
+$$\alpha \backsim Normal(0, 10)$$
 </div>
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+<div id="right">
+- `Likelihood`
+- `Linear model`
+- `sigma prior`
+- `beta prior`
+- `alpha prior`
+</div>
