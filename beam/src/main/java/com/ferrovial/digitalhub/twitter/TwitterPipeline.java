@@ -30,7 +30,7 @@ public class TwitterPipeline {
      */
     private interface Options extends PipelineOptions {
         @Description("Kafka Bootstrap Servers")
-        @Default.String("52.166.0.40:9092")
+        @Default.String("localhost:9092")
         String getKafkaServer();
         void setKafkaServer(String value);
 
@@ -116,7 +116,7 @@ public class TwitterPipeline {
          * analyze sentiment tweets
          */
 
-        final String key=options.getInputTopic();
+        final String key=options.getOutputTopic();
         PCollection<KV<String,String>> textTweets =
                 tweetsInEnglish.apply("getTextField", ParDo.of(new DoFn<String, KV<String,String>>() {
                     @ProcessElement

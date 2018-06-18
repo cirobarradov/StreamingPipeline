@@ -6,12 +6,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
 public class TwitterUtils {
@@ -126,11 +130,14 @@ public class TwitterUtils {
         ObjectNode res = mapper.createObjectNode();
         res.put("id", id);
         //2018-06-07T09:53:27.227Z
-        Clock myClock = Clock.systemDefaultZone();
-        Instant now = myClock.instant();
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(now, ZoneId.of("Europe/Madrid"));
+        //2000-01-01T00:00:00Z
 
-        res.put("timestamp", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS zzz").format(zdt));
+
+        TimeZone tz = TimeZone.getTimeZone("Europe/Madrid");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(tz);
+
+        res.put("timestamp", df.format(new Date()));
 
         //"2018/06/07-12:35:03
         // "2000-01-01T00:00:00Z"
@@ -138,8 +145,46 @@ public class TwitterUtils {
         res.put("sentiment", sentimentJson.get("documents").get(0).get("score"));
         res.put("keyPhrases", keyPhrasesJson.get("documents").get(0).get("keyPhrases"));
         res.put("position", tweet.get("User").get("Location"));
-        res.put("json",json);
+        res.put("user", tweet.get("User").get("ScreenName"));
+        //res.put("json",json);
+        /**
+         * {"id":"1007950583351963650",
+         * "timestamp":"2018-06-16 14:47:46:226 CEST",
+         * "text":"\"RT @Thirdsyphon: @AOTPRadio @KatyTurNBC @JustSchmeltzer @MSNBC @KatyTurNBC has been following the unfolding calamity of Trump since the mom…\"",
+         * "sentiment":0.5,
+         * "keyPhrases":["KatyTurNBC","AOTPRadio","JustSchmeltzer","MSNBC","unfolding calamity of Trump"],"position":null,
+         * "json":"{\"....:[],\"URLEntities\":[]}"}
+         */
         return res.toString();
+    }
+
+    public static void main (String[] args)
+    {
+        //Clock myClock = Clock.systemDefaultZone();
+        //Instant now = myClock.instant();
+        //ZonedDateTime zdt = ZonedDateTime.ofInstant(now, ZoneId.of("Europe/Madrid"));
+        //String res= DateTimeFormatter.ofPattern("%Y-%m-%dT%H:%M:%SZ").format(zdt);
+        //System.out.println(res);
+        System.out.println("2000-01-01T00:00:00Z");
+
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Madrid");
+        Instant currTimeStamp = Instant.now();
+
+        System.out.println("current timestamp: "+ZonedDateTime.now());
+        System.out.println("current timestamp: "+currTimeStamp);
+
+        // get current time in milli seconds
+        System.out.println("current time in milli seconds: "+currTimeStamp.toEpochMilli());
+
+        // get current time in unix time
+        System.out.println("current time in unix time: "+currTimeStamp.getEpochSecond());
+
+        TimeZone tz = TimeZone.getTimeZone("Europe/Madrid");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(tz);
+        String nowAsISO = df.format(new Date());
+        System.out.println(nowAsISO);
+
     }
 
 
