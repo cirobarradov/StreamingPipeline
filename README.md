@@ -17,30 +17,33 @@ Requirements
 
 Steps
 ------------
-- ##### Start Apache Kafka and Zookeeper servers
+- ##### Start Imply distribution
+1.  Download Imply from [imply.io/get-started](https://imply.io/get-started) and unpack the release archive
 ```
-confluent start kafka 
+tar -xzf imply-2.6.0.tar.gz
+cd imply-2.6.0
 ```
-- ##### Apache Druid Quickstart
-Install and start **druid** 
+2. In conf/supervise/quickstart.conf, uncomment the tranquility-kafka line.
+3. In conf-quickstart/tranquility/kafka.json, customize the properties and dataSources.
 ```
-curl -O http://static.druid.io/artifacts/releases/druid-0.12.1-bin.tar.gz
-tar -xzf druid-0.12.1-bin.tar.gz
-cd druid-0.12.1
-bin/init
-java `cat conf-quickstart/druid/historical/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/historical:lib/*" io.druid.cli.Main server historical
-java `cat conf-quickstart/druid/broker/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/broker:lib/*" io.druid.cli.Main server broker
-java `cat conf-quickstart/druid/coordinator/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/coordinator:lib/*" io.druid.cli.Main server coordinator
-java `cat conf-quickstart/druid/overlord/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/overlord:lib/*" io.druid.cli.Main server overlord
-java `cat conf-quickstart/druid/middleManager/jvm.config | xargs` -cp "conf-quickstart/druid/_common:conf-quickstart/druid/middleManager:lib/*" io.druid.cli.Main server middleManager
+cp kafka.json conf-quickstart/tranquility/kafka.json
 ```
-Install and start **tranquility**
+4. Start Imply (which includes Druid, Imply UI, and ZooKeeper)
 ```
-curl -O http://static.druid.io/tranquility/releases/tranquility-distribution-0.8.0.tgz
-tar -xzf tranquility-distribution-0.8.0.tgz
-cd tranquility-distribution-0.8.0
-bin/tranquility server -configFile <path_to_druid_distro>/conf-quickstart/tranquility/server.json
+bin/supervise -c conf/supervise/quickstart.conf
 ```
+5. Create supervisors 
+```
+cp twitter-kafka-supervisor.json quickstart/twitter-kafka-supervisor.json
+curl -XPOST -H'Content-Type: application/json' -d @quickstart/twitter-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+```
+- ##### Start Apache Kafka 
+```
+ sudo chown -R $(whoami) /var/log/kafka
+ sudo chown -R $(whoami) /var/lib/kafka
+ /usr/bin/kafka-server-start /etc/kafka/server.properties
+```
+
 - ##### [Start Apache Superset](superset) 
 - ##### [Generate Stream Data Sources](sources)
 - ##### [Process data with Apache Beam](beam) 
