@@ -5,6 +5,7 @@ Configure Kafka distribution with twitter kafka source connector
 ----------------------------------------
 
 ```
+sudo chown -R $(whoami) /usr/share/java/kafka/
 cp lib/* /usr/share/java/kafka/
 ```
 (in other operative systems the alternative /share/java/kafka path that includes jars)
