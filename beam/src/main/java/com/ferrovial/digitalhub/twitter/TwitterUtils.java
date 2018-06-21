@@ -3,6 +3,7 @@ package com.ferrovial.digitalhub.twitter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.ferrovial.digitalhub.TimeUtils;
 import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
@@ -133,11 +134,12 @@ public class TwitterUtils {
         //2000-01-01T00:00:00Z
 
 
-        TimeZone tz = TimeZone.getTimeZone("Europe/Madrid");
+/*        TimeZone tz = TimeZone.getTimeZone("Europe/Madrid");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(tz);
 
-        res.put("timestamp", df.format(new Date()));
+        res.put("timestamp", df.format(new Date()));*/
+        res.put("timestamp", TimeUtils.getTimestamp());
 
         //"2018/06/07-12:35:03
         // "2000-01-01T00:00:00Z"

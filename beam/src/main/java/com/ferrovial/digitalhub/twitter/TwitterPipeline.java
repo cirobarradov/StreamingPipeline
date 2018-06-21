@@ -30,7 +30,7 @@ public class TwitterPipeline {
      */
     private interface Options extends PipelineOptions {
         @Description("Kafka Bootstrap Servers")
-        @Default.String("localhost:9092")
+        @Default.String("40.113.158.168:9092")
         String getKafkaServer();
         void setKafkaServer(String value);
 
