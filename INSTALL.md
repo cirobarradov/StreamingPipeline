@@ -46,6 +46,13 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 Kafka
 ------------
+option a (apt-get)
+```
+wget -qO - https://packages.confluent.io/deb/4.1/archive.key | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://packages.confluent.io/deb/4.1 stable main"
+sudo apt-get update && sudo apt-get install confluent-platform-oss-2.11
+```
+option b (download)
 ```
 wget http://packages.confluent.io/archive/4.0/confluent-4.0.0-2.11.zip
 unzip confluent-4.0.0-2.11.zip
