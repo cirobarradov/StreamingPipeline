@@ -17,9 +17,13 @@ Requirements
 
 Steps
 ------------
+- ##### Install software requirements
+0. [Installation](INSTALL.md)
+
 - ##### Start Druid and Kafka 
 1. Start Imply (which includes Druid, Imply UI, and ZooKeeper)
 ```
+cd imply-2.6.0
 bin/supervise -c conf/supervise/quickstart.conf
 ```
 2. Start Kafka
