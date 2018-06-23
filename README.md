@@ -31,15 +31,15 @@ bin/supervise -c conf/supervise/quickstart.conf
  sudo chown -R $(whoami) /var/lib/kafka
  /usr/bin/kafka-server-start /etc/kafka/server.properties
 ```
+- ##### [Start Apache Superset](superset) 
+- ##### [Generate Stream Data Sources](sources)
+- ##### [Process data with Apache Beam](beam) 
+- ##### [Collect data processed with Apache Druid](druid)
 3. Create supervisors 
 ```
 cp twitter-kafka-supervisor.json quickstart/twitter-kafka-supervisor.json
 curl -XPOST -H'Content-Type: application/json' -d @quickstart/twitter-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
 ```
-- ##### [Start Apache Superset](superset) 
-- ##### [Generate Stream Data Sources](sources)
-- ##### [Process data with Apache Beam](beam) 
-- ##### [Collect data processed with Apache Druid](druid)
 - ##### [Data visualization with Apache Superset](superset) 
  
 License
