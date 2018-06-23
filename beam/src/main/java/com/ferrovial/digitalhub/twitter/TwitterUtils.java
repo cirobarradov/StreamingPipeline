@@ -1,23 +1,21 @@
 package com.ferrovial.digitalhub.twitter;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ferrovial.digitalhub.TimeUtils;
-import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Clock;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TimeZone;
-import java.util.stream.Stream;
 
 public class TwitterUtils {
     final static String[] LANGUAGES = {"EN","ES"};
@@ -67,6 +65,18 @@ public class TwitterUtils {
         JsonNode tweet= parseJson(json);
         String text= String.valueOf(tweet.get("Text"));
         return text;
+    }
+
+    public static String parseKeyPhrases(JsonNode keyPhrases)
+    {
+        String keys = "";
+        ArrayNode phrases = (ArrayNode) keyPhrases.get("documents").get(0).get("keyPhrases");
+        Iterator it = phrases.elements();
+        while (it.hasNext())
+        {
+            keys = ((JsonNode) it.next()).asText() + " " + keys;
+        }
+        return keys.trim();
     }
 
     /**
@@ -145,7 +155,7 @@ public class TwitterUtils {
         // "2000-01-01T00:00:00Z"
         res.put("text", text);
         res.put("sentiment", sentimentJson.get("documents").get(0).get("score"));
-        res.put("keyPhrases", keyPhrasesJson.get("documents").get(0).get("keyPhrases"));
+        res.put("keyPhrases", parseKeyPhrases(keyPhrasesJson));
         res.put("position", tweet.get("User").get("Location"));
         res.put("user", tweet.get("User").get("ScreenName"));
         //res.put("json",json);
