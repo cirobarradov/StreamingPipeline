@@ -17,33 +17,22 @@ Requirements
 
 Steps
 ------------
-- ##### Start Imply distribution
-1.  Download Imply from [imply.io/get-started](https://imply.io/get-started) and unpack the release archive
-```
-tar -xzf imply-2.6.0.tar.gz
-cd imply-2.6.0
-```
-2. In conf/supervise/quickstart.conf, uncomment the tranquility-kafka line.
-3. In conf-quickstart/tranquility/kafka.json, customize the properties and dataSources.
-```
-cp kafka.json conf-quickstart/tranquility/kafka.json
-```
-4. Start Imply (which includes Druid, Imply UI, and ZooKeeper)
+- ##### Start Druid and Kafka 
+1. Start Imply (which includes Druid, Imply UI, and ZooKeeper)
 ```
 bin/supervise -c conf/supervise/quickstart.conf
 ```
-5. Create supervisors 
-```
-cp twitter-kafka-supervisor.json quickstart/twitter-kafka-supervisor.json
-curl -XPOST -H'Content-Type: application/json' -d @quickstart/twitter-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
-```
-- ##### Start Apache Kafka 
+2. Start Kafka
 ```
  sudo chown -R $(whoami) /var/log/kafka
  sudo chown -R $(whoami) /var/lib/kafka
  /usr/bin/kafka-server-start /etc/kafka/server.properties
 ```
-
+3. Create supervisors 
+```
+cp twitter-kafka-supervisor.json quickstart/twitter-kafka-supervisor.json
+curl -XPOST -H'Content-Type: application/json' -d @quickstart/twitter-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+```
 - ##### [Start Apache Superset](superset) 
 - ##### [Generate Stream Data Sources](sources)
 - ##### [Process data with Apache Beam](beam) 
