@@ -13,7 +13,6 @@ Requirements
 - [Docker-Compose](INSTALL.md)
 - [Kafka](INSTALL.md)
 - [Druid](INSTALL.md)
-- [Apache Beam](INSTALL.md)
 
 Steps
 ------------
