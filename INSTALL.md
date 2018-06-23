@@ -61,7 +61,7 @@ cd confluent-4.0.0
 ```
 Druid
 ------------
-- Imply is a powerful event analytics platform built on the open-source Druid data store
+- [Imply](https://imply.io) is a powerful event analytics platform built on the open-source Druid data store
 - Download Imply from [imply.io/get-started](https://imply.io/get-started) and unpack the release archive
 ```
 tar -xzf imply-2.6.0.tar.gz
