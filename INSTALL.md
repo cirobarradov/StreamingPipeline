@@ -10,6 +10,7 @@ Tech Stack
 - Docker
 - Docker Compose
 - Kafka
+- Druid 
 
 Java 8
 ------------
@@ -58,3 +59,7 @@ wget http://packages.confluent.io/archive/4.0/confluent-4.0.0-2.11.zip
 unzip confluent-4.0.0-2.11.zip
 cd confluent-4.0.0
 ```
+Druid
+------------
+- [Imply](https://imply.io) is a powerful event analytics platform built on the open-source Druid data store
+- Download Imply from [imply.io/get-started](https://imply.io/get-started) and unpack the release archive
