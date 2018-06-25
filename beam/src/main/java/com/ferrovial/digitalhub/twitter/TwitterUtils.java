@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ferrovial.digitalhub.TimeUtils;
+import org.apache.beam.repackaged.beam_sdks_java_core.net.bytebuddy.utility.RandomString;
+import org.apache.beam.repackaged.beam_sdks_java_core.org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -67,30 +69,35 @@ public class TwitterUtils {
         return text;
     }
 
+    public static Double parseSentiment(JsonNode sentimentJson)
+    {
+        Double sentiment= Math.random();
+        if (sentimentJson!=null) {
+            sentiment = sentimentJson.get("documents").get(0).get("score").asDouble();
+        }
+        return sentiment;
+    }
     public static String parseKeyPhrases(JsonNode keyPhrases)
     {
-        String keys = "";
-        ArrayNode phrases = (ArrayNode) keyPhrases.get("documents").get(0).get("keyPhrases");
-        Iterator it = phrases.elements();
-        while (it.hasNext())
-        {
-            keys = ((JsonNode) it.next()).asText() + " " + keys;
+        String keys = RandomStringUtils.randomAlphabetic(10);
+        if (keyPhrases!=null) {
+            ArrayNode phrases = (ArrayNode) keyPhrases.get("documents").get(0).get("keyPhrases");
+            Iterator it = phrases.elements();
+            while (it.hasNext()) {
+                keys = ((JsonNode) it.next()).asText() + " " + keys;
+            }
         }
         return keys.trim();
     }
 
     public static String getUserOrigin(String json)
     {
-        String origin=null;
+        String origin="";
         JsonNode tweet= parseJson(json);
-        JsonNode entities= (JsonNode) tweet.get("entities");
-        if (entities!=null)
+        ArrayNode mentions= (ArrayNode) tweet.get("UserMentionEntities");
+        if (mentions.size()>0)
         {
-            ArrayNode mentions = (ArrayNode) entities.get("user_mentions");
-            if (mentions.size()>0)
-            {
-                origin = mentions.get(0).get("screen_name").asText();
-            }
+            origin = mentions.get(0).get("ScreenName").asText();
         }
         return origin;
     }
@@ -170,15 +177,11 @@ public class TwitterUtils {
         //"2018/06/07-12:35:03
         // "2000-01-01T00:00:00Z"
         res.put("text", text);
-        res.put("sentiment", sentimentJson.get("documents").get(0).get("score"));
+        res.put("sentiment", parseSentiment(sentimentJson));
         res.put("keyPhrases", parseKeyPhrases(keyPhrasesJson));
         res.put("position", tweet.get("User").get("Location"));
         res.put("user", tweet.get("User").get("ScreenName"));
-        String origin=getUserOrigin(json);
-        if (origin!=null)
-        {
-            res.put("user-origin", origin);
-        }
+        res.put("source", getUserOrigin(json));
         //res.put("json",json);
         /**
          * {"id":"1007950583351963650",
@@ -217,152 +220,9 @@ public class TwitterUtils {
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
         System.out.println(nowAsISO);
-        String json= "{\n" +
-                "      \"text\": \"RT @PostGradProblem: In preparation for the NFL lockout, I will be spending twice as much time analyzing my fantasy baseball team during ...\", \n" +
-                "      \"truncated\": true, \n" +
-                "      \"in_reply_to_user_id\": null, \n" +
-                "      \"in_reply_to_status_id\": null, \n" +
-                "      \"favorited\": false, \n" +
-                "      \"source\": \"<a href=\\\"http://twitter.com/\\\" rel=\\\"nofollow\\\">Twitter for iPhone</a>\", \n" +
-                "      \"in_reply_to_screen_name\": null, \n" +
-                "      \"in_reply_to_status_id_str\": null, \n" +
-                "      \"id_str\": \"54691802283900928\", \n" +
-                "      \"entities\": {\n" +
-                "            \"user_mentions\": [\n" +
-                "                  {\n" +
-                "                        \"indices\": [\n" +
-                "                              3, \n" +
-                "                              19\n" +
-                "                        ], \n" +
-                "                        \"screen_name\": \"PostGradProblem\", \n" +
-                "                        \"id_str\": \"271572434\", \n" +
-                "                        \"name\": \"PostGradProblems\", \n" +
-                "                        \"id\": 271572434\n" +
-                "                  }\n" +
-                "            ], \n" +
-                "            \"urls\": [ ], \n" +
-                "            \"hashtags\": [ ]\n" +
-                "      }, \n" +
-                "      \"contributors\": null, \n" +
-                "      \"retweeted\": false, \n" +
-                "      \"in_reply_to_user_id_str\": null, \n" +
-                "      \"place\": null, \n" +
-                "      \"retweet_count\": 4, \n" +
-                "      \"created_at\": \"Sun Apr 03 23:48:36 +0000 2011\", \n" +
-                "      \"retweeted_status\": {\n" +
-                "            \"text\": \"In preparation for the NFL lockout, I will be spending twice as much time analyzing my fantasy baseball team during company time. #PGP\", \n" +
-                "            \"truncated\": false, \n" +
-                "            \"in_reply_to_user_id\": null, \n" +
-                "            \"in_reply_to_status_id\": null, \n" +
-                "            \"favorited\": false, \n" +
-                "            \"source\": \"<a href=\\\"http://www.hootsuite.com\\\" rel=\\\"nofollow\\\">HootSuite</a>\", \n" +
-                "            \"in_reply_to_screen_name\": null, \n" +
-                "            \"in_reply_to_status_id_str\": null, \n" +
-                "            \"id_str\": \"54640519019642881\", \n" +
-                "            \"entities\": {\n" +
-                "                  \"user_mentions\": [ ], \n" +
-                "                  \"urls\": [ ], \n" +
-                "                  \"hashtags\": [\n" +
-                "                        {\n" +
-                "                              \"text\": \"PGP\", \n" +
-                "                              \"indices\": [\n" +
-                "                                    130, \n" +
-                "                                    134\n" +
-                "                              ]\n" +
-                "                        }\n" +
-                "                  ]\n" +
-                "            }, \n" +
-                "            \"contributors\": null, \n" +
-                "            \"retweeted\": false, \n" +
-                "            \"in_reply_to_user_id_str\": null, \n" +
-                "            \"place\": null, \n" +
-                "            \"retweet_count\": 4, \n" +
-                "            \"created_at\": \"Sun Apr 03 20:24:49 +0000 2011\", \n" +
-                "            \"user\": {\n" +
-                "                  \"notifications\": null, \n" +
-                "                  \"profile_use_background_image\": true, \n" +
-                "                  \"statuses_count\": 31, \n" +
-                "                  \"profile_background_color\": \"C0DEED\", \n" +
-                "                  \"followers_count\": 3066, \n" +
-                "                  \"profile_image_url\": \"http://a2.twimg.com/profile_images/1285770264/PGP_normal.jpg\", \n" +
-                "                  \"listed_count\": 6, \n" +
-                "                  \"profile_background_image_url\": \"http://a3.twimg.com/a/1301071706/images/themes/theme1/bg.png\", \n" +
-                "                  \"description\": \"\", \n" +
-                "                  \"screen_name\": \"PostGradProblem\", \n" +
-                "                  \"default_profile\": true, \n" +
-                "                  \"verified\": false, \n" +
-                "                  \"time_zone\": null, \n" +
-                "                  \"profile_text_color\": \"333333\", \n" +
-                "                  \"is_translator\": false, \n" +
-                "                  \"profile_sidebar_fill_color\": \"DDEEF6\", \n" +
-                "                  \"location\": \"\", \n" +
-                "                  \"id_str\": \"271572434\", \n" +
-                "                  \"default_profile_image\": false, \n" +
-                "                  \"profile_background_tile\": false, \n" +
-                "                  \"lang\": \"en\", \n" +
-                "                  \"friends_count\": 21, \n" +
-                "                  \"protected\": false, \n" +
-                "                  \"favourites_count\": 0, \n" +
-                "                  \"created_at\": \"Thu Mar 24 19:45:44 +0000 2011\", \n" +
-                "                  \"profile_link_color\": \"0084B4\", \n" +
-                "                  \"name\": \"PostGradProblems\", \n" +
-                "                  \"show_all_inline_media\": false, \n" +
-                "                  \"follow_request_sent\": null, \n" +
-                "                  \"geo_enabled\": false, \n" +
-                "                  \"profile_sidebar_border_color\": \"C0DEED\", \n" +
-                "                  \"url\": null, \n" +
-                "                  \"id\": 271572434, \n" +
-                "                  \"contributors_enabled\": false, \n" +
-                "                  \"following\": null, \n" +
-                "                  \"utc_offset\": null\n" +
-                "            }, \n" +
-                "            \"id\": 54640519019642880, \n" +
-                "            \"coordinates\": null, \n" +
-                "            \"geo\": null\n" +
-                "      }, \n" +
-                "      \"user\": {\n" +
-                "            \"notifications\": null, \n" +
-                "            \"profile_use_background_image\": true, \n" +
-                "            \"statuses_count\": 351, \n" +
-                "            \"profile_background_color\": \"C0DEED\", \n" +
-                "            \"followers_count\": 48, \n" +
-                "            \"profile_image_url\": \"http://a1.twimg.com/profile_images/455128973/gCsVUnofNqqyd6tdOGevROvko1_500_normal.jpg\", \n" +
-                "            \"listed_count\": 0, \n" +
-                "            \"profile_background_image_url\": \"http://a3.twimg.com/a/1300479984/images/themes/theme1/bg.png\", \n" +
-                "            \"description\": \"watcha doin in my waters?\", \n" +
-                "            \"screen_name\": \"OldGREG85\", \n" +
-                "            \"default_profile\": true, \n" +
-                "            \"verified\": false, \n" +
-                "            \"time_zone\": \"Hawaii\", \n" +
-                "            \"profile_text_color\": \"333333\", \n" +
-                "            \"is_translator\": false, \n" +
-                "            \"profile_sidebar_fill_color\": \"DDEEF6\", \n" +
-                "            \"location\": \"Texas\", \n" +
-                "            \"id_str\": \"80177619\", \n" +
-                "            \"default_profile_image\": false, \n" +
-                "            \"profile_background_tile\": false, \n" +
-                "            \"lang\": \"en\", \n" +
-                "            \"friends_count\": 81, \n" +
-                "            \"protected\": false, \n" +
-                "            \"favourites_count\": 0, \n" +
-                "            \"created_at\": \"Tue Oct 06 01:13:17 +0000 2009\", \n" +
-                "            \"profile_link_color\": \"0084B4\", \n" +
-                "            \"name\": \"GG\", \n" +
-                "            \"show_all_inline_media\": false, \n" +
-                "            \"follow_request_sent\": null, \n" +
-                "            \"geo_enabled\": false, \n" +
-                "            \"profile_sidebar_border_color\": \"C0DEED\", \n" +
-                "            \"url\": null, \n" +
-                "            \"id\": 80177619, \n" +
-                "            \"contributors_enabled\": false, \n" +
-                "            \"following\": null, \n" +
-                "            \"utc_offset\": -36000\n" +
-                "      }, \n" +
-                "      \"id\": 54691802283900930, \n" +
-                "      \"coordinates\": null, \n" +
-                "      \"geo\": null\n" +
-                "}";
+        String json= "{\"CreatedAt\":1529567636000,\"Id\":1009705964923228160,\"Text\":\"RT @Alyssa_Milano: This is American. https://t.co/peAxQdzVGX\",\"Source\":\"<a href=\\\"http://twitter.com/download/iphone\\\" rel=\\\"nofollow\\\">Twitter for iPhone</a>\",\"Truncated\":false,\"InReplyToStatusId\":-1,\"InReplyToUserId\":-1,\"InReplyToScreenName\":null,\"GeoLocation\":null,\"Place\":null,\"Favorited\":false,\"Retweeted\":false,\"FavoriteCount\":0,\"User\":{\"Id\":43640713,\"Name\":\"Lydia Hall ❄️\",\"ScreenName\":\"lydiafhall\",\"Location\":\"Washington, D.C.\",\"Description\":\"Political nerd, feminist, proud Tufts & Columbia alum, ed/health policy/TV enthusiast, writer/editor, closet Us Weekly reader. #stillwithher #resist Views mine.\",\"ContributorsEnabled\":false,\"ProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_normal.jpg\",\"BiggerProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_bigger.jpg\",\"MiniProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_mini.jpg\",\"OriginalProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU.jpg\",\"ProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_normal.jpg\",\"BiggerProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_bigger.jpg\",\"MiniProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_mini.jpg\",\"OriginalProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU.jpg\",\"DefaultProfileImage\":false,\"URL\":\"https://Instagram.com/lydiahall86/\",\"Protected\":false,\"FollowersCount\":3585,\"ProfileBackgroundColor\":\"BADFCD\",\"ProfileTextColor\":\"0C3E53\",\"ProfileLinkColor\":\"89C9FA\",\"ProfileSidebarFillColor\":\"FFF7CC\",\"ProfileSidebarBorderColor\":\"F2E195\",\"ProfileUseBackgroundImage\":true,\"DefaultProfile\":false,\"ShowAllInlineMedia\":false,\"FriendsCount\":3476,\"CreatedAt\":1243743915000,\"FavouritesCount\":14718,\"UtcOffset\":-1,\"TimeZone\":null,\"ProfileBackgroundImageURL\":\"http://abs.twimg.com/images/themes/theme12/bg.gif\",\"ProfileBackgroundImageUrlHttps\":\"https://abs.twimg.com/images/themes/theme12/bg.gif\",\"ProfileBannerURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/web\",\"ProfileBannerRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/web_retina\",\"ProfileBannerIPadURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/ipad\",\"ProfileBannerIPadRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/ipad_retina\",\"ProfileBannerMobileURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/mobile\",\"ProfileBannerMobileRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/mobile_retina\",\"ProfileBackgroundTiled\":true,\"Lang\":\"en\",\"StatusesCount\":14870,\"GeoEnabled\":true,\"Verified\":false,\"Translator\":false,\"ListedCount\":65,\"FollowRequestSent\":false,\"WithheldInCountries\":[]},\"Retweet\":true,\"Contributors\":[],\"RetweetCount\":0,\"RetweetedByMe\":false,\"CurrentUserRetweetId\":-1,\"PossiblySensitive\":false,\"Lang\":\"en\",\"WithheldInCountries\":[],\"HashtagEntities\":[],\"UserMentionEntities\":[{\"Name\":\"Alyssa Milano\",\"Id\":26642006,\"Text\":\"Alyssa_Milano\",\"ScreenName\":\"Alyssa_Milano\",\"Start\":3,\"End\":17}],\"MediaEntities\":[],\"SymbolEntities\":[],\"URLEntities\":[{\"URL\":\"https://t.co/peAxQdzVGX\",\"Text\":\"https://t.co/peAxQdzVGX\",\"ExpandedURL\":\"https://twitter.com/aclu/status/1009648832202919936\",\"Start\":37,\"End\":60,\"DisplayURL\":\"twitter.com/aclu/status/10…\"}]}";
         getUserOrigin(json);
+        parseKeyPhrases(null);
 
     }
 
