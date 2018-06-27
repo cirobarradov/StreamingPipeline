@@ -115,7 +115,7 @@ public class TravelPipeline {
                 taxiRidesStream.apply("getRides", ParDo.of(new DoFn<String, KV<String,String>>() {
                     @ProcessElement
                     public void processElement(ProcessContext c){
-                        c.output(TravelUtils.mapTaxiData(c.element(),c.timestamp()));
+                        c.output(TravelUtils.mapRidesData(c.element(),c.timestamp()));
                     }
                 })).apply(Window.into(FixedWindows.of(Duration.standardMinutes(options.getWindowSize()))));
 
@@ -123,7 +123,7 @@ public class TravelPipeline {
                 taxiFaresStream.apply("getFares", ParDo.of(new DoFn<String, KV<String,String>>() {
                     @ProcessElement
                     public void processElement(ProcessContext c){
-                        c.output(TravelUtils.mapTaxiData(c.element(),c.timestamp()));
+                        c.output(TravelUtils.mapFaresData(c.element(),c.timestamp()));
                     }
                 })).apply(Window.into(FixedWindows.of(Duration.standardMinutes(options.getWindowSize()))));
                 //})).apply(Window.into(Sessions.withGapDuration(Duration.standardMinutes(options.getWindowSize()))));

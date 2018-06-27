@@ -70,20 +70,31 @@ public class TravelUtils {
         return gson.toJson(map);
     }
 
-    public static KV<String,String> mapTaxiData(String json, Instant timestamp)
+    public static KV<String,String> mapFaresData(String json, Instant timestamp)
+    {
+        Map map=getMap(json);
+        String rideId= (String)map.get("rideId");
+        //timestamp
+        map.put("timestamp", TimeUtils.getTimestamp(timestamp));
+        KV<String,String> res =KV.of(rideId, getJson(map));
+        LOG.info(res.getKey() + "  -> " + res.getValue());
+        return res;
+    }
+
+    public static KV<String,String> mapRidesData(String json, Instant timestamp)
     {
         Map map=getMap(json);
         String rideId= (String)map.get("rideId");
         //timestamp
         map.put("timestamp", TimeUtils.getTimestamp(timestamp));
         //start geohash
-        map.put("startGeohash", getGeoHash((String)map.get("startLat"),(String)map.get("startLon")));
+        map.put("startGeohash", getGeoHash((String) map.get("startLat"), (String) map.get("startLon")));
         //end geohash
-        map.put("endGeohash", getGeoHash((String)map.get("endLat"),(String)map.get("endLon")));
+        map.put("endGeohash", getGeoHash((String) map.get("endLat"), (String) map.get("endLon")));
         //start delimited
-        map.put("startDelimited", (String)map.get("startLat")+","+(String)map.get("startLon"));
+        map.put("startDelimited", (String) map.get("startLat") + "," + (String) map.get("startLon"));
         //end delimited
-        map.put("endDelimited", (String)map.get("endlat")+","+(String)map.get("endlon"));
+        map.put("endDelimited", (String) map.get("endLat") + "," + (String) map.get("endLon"));
         KV<String,String> res =KV.of(rideId, getJson(map));
         LOG.info(res.getKey() + "  -> " + res.getValue());
         return res;
