@@ -46,7 +46,7 @@ public class TravelPipeline {
         void setTaxiFaresTopic(String value);
 
         @Description("Kafka Output Topic Name")
-        @Default.String("taxi_output")
+        @Default.String("taxi_rides")
         String getOutputTopic();
         void setOutputTopic(String value);
 
@@ -160,6 +160,7 @@ public class TravelPipeline {
         /**
          * write text in topic
          */
+
         taxi.apply("WriteToKafka",
                 KafkaIO.<String, String>write()
                         .withBootstrapServers(options.getKafkaServer())

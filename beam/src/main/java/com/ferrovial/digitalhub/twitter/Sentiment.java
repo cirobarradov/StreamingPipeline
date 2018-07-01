@@ -35,31 +35,35 @@ public class Sentiment {
 
     static String path = "/text/analytics/v2.0/sentiment";
 
-    public static String getSentiment (Documents documents) throws Exception {
+    public static String getSentiment (Documents documents) {
         String text = new Gson().toJson(documents);
-        byte[] encoded_text = text.getBytes("UTF-8");
+        StringBuilder response = new StringBuilder();
+        try {
+            byte[] encoded_text = text.getBytes("UTF-8");
 
-        URL url = new URL(host+path);
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "text/json");
-        connection.setRequestProperty("Ocp-Apim-Subscription-Key", Constants.accessKey);
-        connection.setDoOutput(true);
+            URL url = new URL(host + path);
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "text/json");
+            connection.setRequestProperty("Ocp-Apim-Subscription-Key", Constants.accessKey);
+            connection.setDoOutput(true);
 
-        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-        wr.write(encoded_text, 0, encoded_text.length);
-        wr.flush();
-        wr.close();
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            wr.write(encoded_text, 0, encoded_text.length);
+            wr.flush();
+            wr.close();
 
-        StringBuilder response = new StringBuilder ();
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(connection.getInputStream()));
-        String line;
-        while ((line = in.readLine()) != null) {
-            response.append(line);
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+            in.close();
+        } catch (Exception e)
+        {
+
         }
-        in.close();
-
         return response.toString();
     }
 

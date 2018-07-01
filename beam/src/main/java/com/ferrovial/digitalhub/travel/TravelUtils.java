@@ -47,12 +47,20 @@ public class TravelUtils {
 
         double startLat = Double.parseDouble(latitude);
         double startLon = Double.parseDouble(longitude);
+        String res = null;
         /**
          * This method uses the given number of characters as the desired precision
          * value. The hash can only be 64bits long, thus a maximum precision of 12
          * characters can be achieved.
          */
-        return GeoHash.withCharacterPrecision(startLat,startLon,numberOfCharacters).toBase32();
+        try {
+            res = GeoHash.withCharacterPrecision(startLat, startLon, numberOfCharacters).toBase32();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return res;
 
     }
 

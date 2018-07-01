@@ -14,10 +14,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 public class TwitterUtils {
     final static String[] LANGUAGES = {"EN","ES"};
@@ -77,9 +78,11 @@ public class TwitterUtils {
         }
         return sentiment;
     }
-    public static String parseKeyPhrases(JsonNode keyPhrases)
+    public static String parseKeyPhrases(JsonNode keyPhrases, String text)
     {
-        String keys = RandomStringUtils.randomAlphabetic(10);
+        List <String> wordsList = Arrays.asList(text.split("\\s+"));
+        String keys = wordsList.get(new Random().nextInt(wordsList.size())).
+                replaceAll("(?:--|[\\[\\]{}()+/.,\\\\])", "");;
         if (keyPhrases!=null) {
             ArrayNode phrases = (ArrayNode) keyPhrases.get("documents").get(0).get("keyPhrases");
             Iterator it = phrases.elements();
@@ -120,7 +123,7 @@ public class TwitterUtils {
         try {
             sentimentJson = parseJson(Sentiment.getSentiment(documents));
             keyPhrasesJson = parseJson(KeyPhrases.getKeyPhrases(documents));
-            Thread.sleep(3000);
+            Thread.sleep(60000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,7 +181,7 @@ public class TwitterUtils {
         // "2000-01-01T00:00:00Z"
         res.put("text", text);
         res.put("sentiment", parseSentiment(sentimentJson));
-        res.put("keyPhrases", parseKeyPhrases(keyPhrasesJson));
+        res.put("keyPhrases", parseKeyPhrases(keyPhrasesJson,text));
         res.put("position", tweet.get("User").get("Location"));
         res.put("user", tweet.get("User").get("ScreenName"));
         res.put("source", getUserOrigin(json));
@@ -222,7 +225,7 @@ public class TwitterUtils {
         System.out.println(nowAsISO);
         String json= "{\"CreatedAt\":1529567636000,\"Id\":1009705964923228160,\"Text\":\"RT @Alyssa_Milano: This is American. https://t.co/peAxQdzVGX\",\"Source\":\"<a href=\\\"http://twitter.com/download/iphone\\\" rel=\\\"nofollow\\\">Twitter for iPhone</a>\",\"Truncated\":false,\"InReplyToStatusId\":-1,\"InReplyToUserId\":-1,\"InReplyToScreenName\":null,\"GeoLocation\":null,\"Place\":null,\"Favorited\":false,\"Retweeted\":false,\"FavoriteCount\":0,\"User\":{\"Id\":43640713,\"Name\":\"Lydia Hall ❄️\",\"ScreenName\":\"lydiafhall\",\"Location\":\"Washington, D.C.\",\"Description\":\"Political nerd, feminist, proud Tufts & Columbia alum, ed/health policy/TV enthusiast, writer/editor, closet Us Weekly reader. #stillwithher #resist Views mine.\",\"ContributorsEnabled\":false,\"ProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_normal.jpg\",\"BiggerProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_bigger.jpg\",\"MiniProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_mini.jpg\",\"OriginalProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU.jpg\",\"ProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_normal.jpg\",\"BiggerProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_bigger.jpg\",\"MiniProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_mini.jpg\",\"OriginalProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU.jpg\",\"DefaultProfileImage\":false,\"URL\":\"https://Instagram.com/lydiahall86/\",\"Protected\":false,\"FollowersCount\":3585,\"ProfileBackgroundColor\":\"BADFCD\",\"ProfileTextColor\":\"0C3E53\",\"ProfileLinkColor\":\"89C9FA\",\"ProfileSidebarFillColor\":\"FFF7CC\",\"ProfileSidebarBorderColor\":\"F2E195\",\"ProfileUseBackgroundImage\":true,\"DefaultProfile\":false,\"ShowAllInlineMedia\":false,\"FriendsCount\":3476,\"CreatedAt\":1243743915000,\"FavouritesCount\":14718,\"UtcOffset\":-1,\"TimeZone\":null,\"ProfileBackgroundImageURL\":\"http://abs.twimg.com/images/themes/theme12/bg.gif\",\"ProfileBackgroundImageUrlHttps\":\"https://abs.twimg.com/images/themes/theme12/bg.gif\",\"ProfileBannerURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/web\",\"ProfileBannerRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/web_retina\",\"ProfileBannerIPadURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/ipad\",\"ProfileBannerIPadRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/ipad_retina\",\"ProfileBannerMobileURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/mobile\",\"ProfileBannerMobileRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/mobile_retina\",\"ProfileBackgroundTiled\":true,\"Lang\":\"en\",\"StatusesCount\":14870,\"GeoEnabled\":true,\"Verified\":false,\"Translator\":false,\"ListedCount\":65,\"FollowRequestSent\":false,\"WithheldInCountries\":[]},\"Retweet\":true,\"Contributors\":[],\"RetweetCount\":0,\"RetweetedByMe\":false,\"CurrentUserRetweetId\":-1,\"PossiblySensitive\":false,\"Lang\":\"en\",\"WithheldInCountries\":[],\"HashtagEntities\":[],\"UserMentionEntities\":[{\"Name\":\"Alyssa Milano\",\"Id\":26642006,\"Text\":\"Alyssa_Milano\",\"ScreenName\":\"Alyssa_Milano\",\"Start\":3,\"End\":17}],\"MediaEntities\":[],\"SymbolEntities\":[],\"URLEntities\":[{\"URL\":\"https://t.co/peAxQdzVGX\",\"Text\":\"https://t.co/peAxQdzVGX\",\"ExpandedURL\":\"https://twitter.com/aclu/status/1009648832202919936\",\"Start\":37,\"End\":60,\"DisplayURL\":\"twitter.com/aclu/status/10…\"}]}";
         getUserOrigin(json);
-        parseKeyPhrases(null);
+        parseKeyPhrases(parseJson(json),"Political nerd, feminist, proud Tufts & Columbia alum, ed/health policy/TV enthusiast, asdf");
 
     }
 
