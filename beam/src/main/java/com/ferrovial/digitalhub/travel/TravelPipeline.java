@@ -46,7 +46,7 @@ public class TravelPipeline {
         void setTaxiFaresTopic(String value);
 
         @Description("Kafka Output Topic Name")
-        @Default.String("taxi_rides")
+        @Default.String("taxi_output")
         String getOutputTopic();
         void setOutputTopic(String value);
 
