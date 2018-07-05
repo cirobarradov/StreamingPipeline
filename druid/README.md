@@ -18,3 +18,4 @@ cd imply-2.6.0/
 sh start_druid_supervisor.sh quickstart/taxi_supervisor.json
 sh start_druid_supervisor.sh quickstart/twitter_supervisor.json
 ```
+![supervisors](/img/supervisors.png)
