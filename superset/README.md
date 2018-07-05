@@ -25,3 +25,4 @@ Repeat for confirmation: XXXX
 Loaded your LOCAL configuration at [/etc/superset/superset_config.py]
 ```
 - ##### Log in browser with user settings
+![Superset login](/img/supersetlogin.png)
