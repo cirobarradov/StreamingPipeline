@@ -1,0 +1,93 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "taxi-kafka",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "iso"
+        },
+        "spatialDimensions" : [
+                           {
+                              "dims" : [
+                                 "startLat",
+                                 "startLon"
+                              ],
+                              "dimName" : "start"
+                           },
+                           {
+                              "dims" : [
+                                 "endLat",
+                                 "endLon"
+                              ],
+                              "dimName" : "end"
+                           }
+                        ],
+        "dimensionsSpec": {
+          "dimensions": [
+"startLat",
+"totalFare",
+"endLon",
+"passengerCnt",
+"isStart",
+"rideId",
+"tolls",
+"paymentType",
+"endLat",
+"driverId",
+"startLon",
+"taxiId",
+"startTime",
+"tip",
+"endTime",
+"timestamp",
+"startGeohash",
+"endGeohash",
+"startDelimited",
+"endDelimited"
+          ]
+        }
+      }
+    },
+  "metricsSpec": [
+       {"name": "rides", "type": "count"},
+       {
+              "name" : "fare_sum",
+              "type" : "doubleSum",
+              "fieldName" : "totalFare"
+            },
+            {
+              "name" : "passenger_count",
+              "type" : "longSum",
+              "fieldName" : "passengerCnt"
+            },
+            {
+              "fieldName" : "totalFare",
+              "name" : "fare_min",
+              "type" : "doubleMin"
+            },
+            {
+              "type" : "doubleMax",
+              "name" : "fare_max",
+              "fieldName" : "totalFare"
+            }
+
+],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "MINUTE",
+      "queryGranularity": "NONE",
+      "rollup": true
+    }
+  },
+  "ioConfig": {
+    "topic": "taxi_output",
+    "consumerProperties": {
+      "bootstrap.servers": "localhost:9092"
+    },
+    "useEarliestOffset": true
+  }
+}
