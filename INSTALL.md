@@ -67,3 +67,7 @@ Druid
  wget https://static.imply.io/release/imply-2.6.0.tar.gz
  tar -xvf imply-2.6.0.tar.gz
 ```
+- Copy [script files](scripts) in imply folder
+```
+cp script/* imply-2.6.0/
+```
