@@ -26,5 +26,8 @@ Loaded your LOCAL configuration at [/etc/superset/superset_config.py]
 ```
 - ##### Log in browser with user settings
 ![Superset login](/img/supersetlogin.png)
+- ##### Go to datasources tab menu
 - ##### Add druid cluster
 ![Superset druid add](/img/supersetdruidcluster.png)
+- ##### Scan new datasources
+![Superset druid new datasources](/img/supersetdatasources.png)
