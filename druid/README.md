@@ -5,22 +5,16 @@ Load data from Kafka into Druid
 
 Start druid and kafka
 ----------------------
-1. Start Imply (which includes Druid, Imply UI, and ZooKeeper)
+0. Kafka and druid [started](../README.md)
+1. Copy [start druid supervisor script](scripts) and [configuration files](scripts)
 ```
-cd imply-2.6.0
-bin/supervise -c conf/supervise/quickstart.conf
+cp start_druid_supervisor.sh imply-2.6.0/
+cp taxi_supervisor.json imply-2.6.0/quickstart/
+cp twitter_supervisor.json imply-2.6.0/quickstart/
 ```
-2. Start Kafka
+2. Create supervisors 
 ```
- sudo chown -R $(whoami) /var/log/kafka
- sudo chown -R $(whoami) /var/lib/kafka
- /usr/bin/kafka-server-start /etc/kafka/server.properties
-```
-- ##### [Generate Stream Data Sources](sources)
-- ##### [Process data with Apache Beam](beam) 
-
-3. Create supervisors 
-```
-cp twitter-kafka-supervisor.json quickstart/twitter-kafka-supervisor.json
-curl -XPOST -H'Content-Type: application/json' -d @quickstart/twitter-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+cd imply-2.6.0/
+sh start_druid_supervisor.sh quickstart/taxi_supervisor.json
+sh start_druid_supervisor.sh quickstart/twitter_supervisor.json
 ```
