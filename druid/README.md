@@ -6,7 +6,7 @@ Load data from Kafka into Druid
 Start druid and kafka
 ----------------------
 0. Kafka and druid [started](../README.md)
-1. Copy [start druid supervisor script](scripts) and [configuration files](scripts)
+1. Copy [start druid supervisor script](../scripts) and [configuration files](../scripts)
 ```
 cp start_druid_supervisor.sh imply-2.6.0/
 cp taxi_supervisor.json imply-2.6.0/quickstart/
