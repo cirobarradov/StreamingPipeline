@@ -18,13 +18,14 @@ public class TimeUtils {
 
         return df.format(instant.toDateTime().toDate());
     }
+
     public static String getTimestamp()
     {
         TimeZone tz = TimeZone.getTimeZone("Europe/Madrid");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(tz);
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, -2);
+        //calendar.add(Calendar.HOUR_OF_DAY, -2);
         Date date = calendar.getTime();
         return df.format(date);
     }

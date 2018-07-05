@@ -115,7 +115,11 @@ public class TravelPipeline {
                 taxiRidesStream.apply("getRides", ParDo.of(new DoFn<String, KV<String,String>>() {
                     @ProcessElement
                     public void processElement(ProcessContext c){
-                        c.output(TravelUtils.mapRidesData(c.element(),c.timestamp()));
+                        if (TravelUtils.hasInvalidCoords(c.element()))
+                        //if (lang.toUpperCase().equals(TwitterUtils.LANGUAGE))
+                        {
+                            c.output(TravelUtils.mapRidesData(c.element(),c.timestamp()));
+                        }
                     }
                 })).apply(Window.into(FixedWindows.of(Duration.standardMinutes(options.getWindowSize()))));
 

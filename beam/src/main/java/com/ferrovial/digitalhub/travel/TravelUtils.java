@@ -124,4 +124,11 @@ public class TravelUtils {
         mapGeoHash(json);
     }
 
+    public static boolean hasInvalidCoords(String json) {
+        Map map=getMap(json);
+        return !((((String) map.get("startLat")).equals("0")) ||
+                (((String) map.get("startLon")).equals("0")) ||
+                (((String) map.get("endLat")).equals("0")) ||
+                (((String) map.get("endLon")).equals("0")));
+    }
 }

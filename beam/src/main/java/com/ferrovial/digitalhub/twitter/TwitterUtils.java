@@ -16,12 +16,13 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class TwitterUtils {
-    final static String[] LANGUAGES = {"EN","ES"};
+    final static String[] LANGUAGES = {"EN"};
     final static String NULL ="null";
 
 
@@ -46,33 +47,16 @@ public class TwitterUtils {
         }
         return lang.substring(1, lang.length() - 1);
     }
-/*
-    public static Boolean isGeoEnabled(String json) {
-        JsonNode tweet= parseJson(json);
-        return !String.valueOf(tweet.get("GeoLocation")).equals(NULL);
 
-    }
-
-    public static String getPosition(String json)
-    {
-        return json;
-    }
-    */
     public static boolean isAllowedLanguage(String json) {
         String lang = getLanguage(json);
         return Arrays.asList(TwitterUtils.LANGUAGES).contains(lang.toUpperCase());
         //return lang.toUpperCase().in(TwitterUtils.LANGUAGE);
     }
 
-    public static  String getText(String json) {
-        JsonNode tweet= parseJson(json);
-        String text= String.valueOf(tweet.get("Text"));
-        return text;
-    }
-
     public static Double parseSentiment(JsonNode sentimentJson)
     {
-        Double sentiment= Math.random();
+        Double sentiment= Math.random()*Math.random();
         if (sentimentJson!=null) {
             sentiment = sentimentJson.get("documents").get(0).get("score").asDouble();
         }
@@ -81,8 +65,9 @@ public class TwitterUtils {
     public static String parseKeyPhrases(JsonNode keyPhrases, String text)
     {
         List <String> wordsList = Arrays.asList(text.split("\\s+"));
-        String keys = wordsList.get(new Random().nextInt(wordsList.size())).
-                replaceAll("(?:--|[\\[\\]{}()+/.,\\\\])", "");;
+        wordsList = wordsList.stream().filter(word -> !word.contains("RT") && !word.contains("@")).
+                map(word -> word.replaceAll("(?:--|[\\[\\]{}()+/.,&\\\\])", "")).collect(Collectors.toList());
+        String keys = wordsList.get(new Random().nextInt(wordsList.size()));
         if (keyPhrases!=null) {
             ArrayNode phrases = (ArrayNode) keyPhrases.get("documents").get(0).get("keyPhrases");
             Iterator it = phrases.elements();
@@ -126,7 +111,7 @@ public class TwitterUtils {
             keyPhrasesJson = parseJson(KeyPhrases.getKeyPhrases(documents));
             Thread.sleep(60000);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         /**
          * {"CreatedAt":1527268365000,"Id":1000062125266485250,"Text":"RT @cjwerleman: While the media fixates on Trump's
@@ -161,21 +146,11 @@ public class TwitterUtils {
          * "PossiblySensitive":false,"Lang":"en","WithheldInCountries":[],"HashtagEntities":[],"UserMentionEntities":[{"Name":"CJ Werleman","Id":33519870,
          * "Text":"cjwerleman","ScreenName":"cjwerleman","Start":3,"End":14}],"MediaEntities":[],"SymbolEntities":[],"URLEntities":[]}
          */
-        //{"documents":[{"score":0.5,"id":"null"}],"errors":[]}
-        //{"documents":[{"id":"null","keyPhrases":["media","Assad","recent absurdity","Syrians","Israel"]}],"errors":[]}
-        //"RT @cjwerleman: While the media fixates on Trump's most recent absurdity, know that Assad is still murdering Syrians; Israel is slaughterin…"
+
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode res = mapper.createObjectNode();
         res.put("id", id);
-        //2018-06-07T09:53:27.227Z
-        //2000-01-01T00:00:00Z
 
-
-/*        TimeZone tz = TimeZone.getTimeZone("Europe/Madrid");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(tz);
-
-        res.put("timestamp", df.format(new Date()));*/
         res.put("timestamp", TimeUtils.getTimestamp());
 
         //"2018/06/07-12:35:03
@@ -183,7 +158,6 @@ public class TwitterUtils {
         res.put("text", text);
         res.put("sentiment", parseSentiment(sentimentJson));
         res.put("keyPhrases", parseKeyPhrases(keyPhrasesJson,text));
-        res.put("position", tweet.get("User").get("Location"));
         res.put("user", tweet.get("User").get("ScreenName"));
         res.put("source", getUserOrigin(json));
         //res.put("json",json);
@@ -230,7 +204,7 @@ public class TwitterUtils {
         */
         String json= "{\"CreatedAt\":1529567636000,\"Id\":1009705964923228160,\"Text\":\"RT @Alyssa_Milano: This is American. https://t.co/peAxQdzVGX\",\"Source\":\"<a href=\\\"http://twitter.com/download/iphone\\\" rel=\\\"nofollow\\\">Twitter for iPhone</a>\",\"Truncated\":false,\"InReplyToStatusId\":-1,\"InReplyToUserId\":-1,\"InReplyToScreenName\":null,\"GeoLocation\":null,\"Place\":null,\"Favorited\":false,\"Retweeted\":false,\"FavoriteCount\":0,\"User\":{\"Id\":43640713,\"Name\":\"Lydia Hall ❄️\",\"ScreenName\":\"lydiafhall\",\"Location\":\"Washington, D.C.\",\"Description\":\"Political nerd, feminist, proud Tufts & Columbia alum, ed/health policy/TV enthusiast, writer/editor, closet Us Weekly reader. #stillwithher #resist Views mine.\",\"ContributorsEnabled\":false,\"ProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_normal.jpg\",\"BiggerProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_bigger.jpg\",\"MiniProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_mini.jpg\",\"OriginalProfileImageURL\":\"http://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU.jpg\",\"ProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_normal.jpg\",\"BiggerProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_bigger.jpg\",\"MiniProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU_mini.jpg\",\"OriginalProfileImageURLHttps\":\"https://pbs.twimg.com/profile_images/960217596711772160/QSKrTELU.jpg\",\"DefaultProfileImage\":false,\"URL\":\"https://Instagram.com/lydiahall86/\",\"Protected\":false,\"FollowersCount\":3585,\"ProfileBackgroundColor\":\"BADFCD\",\"ProfileTextColor\":\"0C3E53\",\"ProfileLinkColor\":\"89C9FA\",\"ProfileSidebarFillColor\":\"FFF7CC\",\"ProfileSidebarBorderColor\":\"F2E195\",\"ProfileUseBackgroundImage\":true,\"DefaultProfile\":false,\"ShowAllInlineMedia\":false,\"FriendsCount\":3476,\"CreatedAt\":1243743915000,\"FavouritesCount\":14718,\"UtcOffset\":-1,\"TimeZone\":null,\"ProfileBackgroundImageURL\":\"http://abs.twimg.com/images/themes/theme12/bg.gif\",\"ProfileBackgroundImageUrlHttps\":\"https://abs.twimg.com/images/themes/theme12/bg.gif\",\"ProfileBannerURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/web\",\"ProfileBannerRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/web_retina\",\"ProfileBannerIPadURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/ipad\",\"ProfileBannerIPadRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/ipad_retina\",\"ProfileBannerMobileURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/mobile\",\"ProfileBannerMobileRetinaURL\":\"https://pbs.twimg.com/profile_banners/43640713/1433087112/mobile_retina\",\"ProfileBackgroundTiled\":true,\"Lang\":\"en\",\"StatusesCount\":14870,\"GeoEnabled\":true,\"Verified\":false,\"Translator\":false,\"ListedCount\":65,\"FollowRequestSent\":false,\"WithheldInCountries\":[]},\"Retweet\":true,\"Contributors\":[],\"RetweetCount\":0,\"RetweetedByMe\":false,\"CurrentUserRetweetId\":-1,\"PossiblySensitive\":false,\"Lang\":\"en\",\"WithheldInCountries\":[],\"HashtagEntities\":[],\"UserMentionEntities\":[{\"Name\":\"Alyssa Milano\",\"Id\":26642006,\"Text\":\"Alyssa_Milano\",\"ScreenName\":\"Alyssa_Milano\",\"Start\":3,\"End\":17}],\"MediaEntities\":[],\"SymbolEntities\":[],\"URLEntities\":[{\"URL\":\"https://t.co/peAxQdzVGX\",\"Text\":\"https://t.co/peAxQdzVGX\",\"ExpandedURL\":\"https://twitter.com/aclu/status/1009648832202919936\",\"Start\":37,\"End\":60,\"DisplayURL\":\"twitter.com/aclu/status/10…\"}]}";
 
-        parseKeyPhrases(null,"Political nerd, feminist, proud Tufts & Columbia alum, ed/health policy/TV enthusiast, asdf");
+        parseKeyPhrases(null,"RT @Alyssa_Milano:Political nerd, feminist, proud Tufts & Columbia alum, ed/health policy/TV enthusiast, asdf");
 
     }
 
