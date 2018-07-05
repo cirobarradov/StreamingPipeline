@@ -15,4 +15,4 @@ docker-compose exec superset superset-demo
 echo "Navigate to http://localhost:8088 to view demo"
 echo -n "Press RETURN to bring down demo"
 read down
-docker-compose down 
+docker-compose down -v
