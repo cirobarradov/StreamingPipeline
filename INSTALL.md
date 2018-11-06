@@ -10,7 +10,6 @@ Tech Stack
 - Docker
 - Docker Compose
 - Kafka
-- Druid 
 
 Java 8
 ------------
